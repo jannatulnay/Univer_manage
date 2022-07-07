@@ -1,0 +1,124 @@
+{% extends 'base.html' %} <br />
+{% load static %} <br />
+{% block title %}Result{%endblock title %} <br />
+{% block content %}
+
+<style>
+  table {
+    font-family: "Inter", sans-serif;
+    text-align: center;
+    border-right: 1px solid green;
+    border-left: 1px solid green;
+  }
+  thead {
+    top: 0;
+    position: sticky;
+    background: #000;
+    color: white;
+  }
+  th {
+    &:first-child {
+      position: sticky;
+      left: 0;
+    }
+  }
+
+  tbody tr,
+  thead tr {
+    position: relative;
+  }
+  tbody th {
+    position: sticky;
+    left: 0;
+  }
+  #myInput {
+    border: 1px solid tomato;
+  }
+</style>
+
+
+<div class="container">
+
+   
+  <h1 class="alert alert-light border rounded text-center">{{myname.user.name}} Result</h1>
+  {% if messages %} <br>
+  {% for message in messages %}
+  <p
+    {%
+    if
+    message.tags
+    %}
+    class="alert alert-{{message.tags}} mb-5"
+    {%
+    endif
+    %}
+  >
+    {{message}}
+  </p>
+  {% endfor %} 
+  {% endif %}  
+
+  {% for fm in form %}
+  <div class="form-group mb-3">
+    {{fm.label_tag}} {{fm}}
+    <small class="text-danger"> {{fm.errors|striptags}} </small>
+  </div>
+  {% endfor %}
+
+  <input
+    class="form-control mb-3"
+    type="text"
+    name=""
+    id="myInput"
+    placeholder="Id No...."
+    onkeyup="searchFun()"
+  />
+  <table class="table" id="myTable">
+    <thead>
+      <tr>
+        <th>Sno.</th>
+        <th>Id No</th>
+        <th>Deparetment</th>
+        <th>Course</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in myresult %}
+      <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{c.id_no}}</td>
+        <td>{{c.department}}</td>
+        <td>{{c.course}}</td>
+        <td>{{c.select_grade}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+<script>
+  const searchFun = () => {
+    let filter = document.getElementById("myInput").value.toUpperCase();
+{% comment %}  {% endcomment %}
+    let myTable = document.getElementById("myTable");
+    let tr = myTable.getElementsByTagName("tr");
+
+    for (var i = 0; i < tr.length; i++) {
+      let td = tr[i].getElementsByTagName("td")[1];
+
+      if (td) {
+        let textvalue = td.textContent || td.innerHTML;
+        if (textvalue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  };
+</script>
+</div>
+{% endblock content %}
